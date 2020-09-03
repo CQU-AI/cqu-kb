@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-version = "~"
+version = "0.1.0"
 
 # Read the contents of README file
 source_root = Path(".")
@@ -13,7 +13,7 @@ with (source_root / "README.md").open(encoding="utf-8") as f:
 with (source_root / "requirements.txt").open(encoding="utf8") as f:
     requirements = f.readlines()
 
-with (source_root / "src" / "~" / "version.py").open(
+with (source_root / "src" / "cqu_kb" / "version.py").open(
         "w", encoding="utf-8"
 ) as f:
     f.writelines(
@@ -25,12 +25,12 @@ with (source_root / "src" / "~" / "version.py").open(
     )
 
 setup(
-    name="~",
+    name="cqu-kb",
     version=version,
-    description="~",
+    description="一个导出重庆大学课程表的第三方工具",
     author="CQU-AI",
     author_email="peter@mail.loopy.tech",
-    url="~",
+    url="https://github.com/CQU-AI/cqu-kb",
     license="GPL License",
     packages=find_packages("src"),
     package_dir={"": "src"},
@@ -40,5 +40,5 @@ setup(
     python_requires=">=3.6",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    entry_points={"console_scripts": ["~", ]},
+    entry_points={"console_scripts": ["cqu-kb", ]},
 )

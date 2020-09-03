@@ -7,10 +7,24 @@ from pathlib import Path
 
 import requests
 
-from ~.config.config import config
-from ~.version import __version__
+from cqu_kb.config.config import config
+from cqu_kb.version import __version__
 
 ERROR_COUNT = 0
+
+
+def check_output_path():
+    if config['output']['path'] is None:
+        flag = False
+        for i in ["Desktop", "桌面", "desktop"]:
+            if (Path.home() / i).is_dir():
+                flag = True
+                break
+        if flag:
+            config['output']['path'] = Path.home() / i / "课表.ics"
+        else:
+            config['output']['path'] = Path("./课表.ics").absolute()
+
 
 def exit():
     print("[{}]  遭遇不可抗的错误，程序完全退出".format(datetime.now()))

@@ -1,0 +1,11 @@
+user_info:
+  password: ~
+  username: ~
+
+output:
+  path: ~
+
+term_start_time:
+  year: 2020
+  month: 08
+  day: 31

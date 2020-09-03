@@ -40,5 +40,5 @@ setup(
     python_requires=">=3.6",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    entry_points={"console_scripts": ["cqu-kb", ]},
+    entry_points={"console_scripts": ["cqu-kb=cqu_kb:console_main", ]},
 )

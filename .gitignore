@@ -140,6 +140,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+*.ics
 .idea/
-src/DrcomExecutor/config/config.yaml
+config.yaml
 *.csv

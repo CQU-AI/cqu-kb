@@ -98,8 +98,8 @@ def console_main():
 
     config.dump()
 
-    main()
+    local_main()
 
 
 if __name__ == '__main__':
-    main()
+    local_main()

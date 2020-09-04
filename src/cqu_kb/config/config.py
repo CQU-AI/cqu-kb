@@ -23,6 +23,9 @@ class Config:
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
+    def __setitem__(self, key, value):
+        self.data.__setitem__(key, value)
+
     def dump(self):
         self.path.write_text(yaml.dump(self.data, Dumper=yaml.SafeDumper))
 

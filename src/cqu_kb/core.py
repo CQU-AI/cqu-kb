@@ -25,18 +25,20 @@ def get_payload(student):
     # First Get. Won't get any information but a cookie.
     response = student.get("/znpk/Pri_StuSel.aspx")
     # Extract the cookie
-    dsafeid = re.findall("DSafeId=.+?;", response.text)[0][8:-1]
+    try:
+        dsafeid = re.findall("DSafeId=.+?;", response.text)[0][8:-1]
+    except IndexError:
+        pass
+    else:
+        # Add the cookie to current session
+        cookie_obj = requests.cookies.create_cookie(domain='jxgl.cqu.edu.cn', name='DSafeId', value=dsafeid)
+        student.session.cookies.set_cookie(cookie_obj)
 
-    # Add the cookie to current session
-    cookie_obj = requests.cookies.create_cookie(domain='jxgl.cqu.edu.cn', name='DSafeId', value=dsafeid)
-    student.session.cookies.set_cookie(cookie_obj)
+        # Waiting for 0.68s. This is MANDATORY.
+        time.sleep(0.68)
 
-    # Waiting for 0.68s. This is MANDATORY.
-    time.sleep(0.68)
-
-    # Then Get again. The real website is revealed.
-    response = student.get("/znpk/Pri_StuSel.aspx")
-
+        # Then Get again. The real website is revealed.
+        response = student.get("/znpk/Pri_StuSel.aspx")
     soup = BS(response.content, features="html.parser")
     return parse.urlencode({
         "Sel_XNXQ": soup.find("option")['value'],

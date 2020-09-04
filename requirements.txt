@@ -1,7 +1,7 @@
 PyYAML~=5.3.1
 requests~=2.24.0
 pytz~=2020.1
-cqujwc~=0.0.7
+cqu_jxgl~=0.1.1
 icalendar~=4.0.6
 beautifulsoup4~=4.9.1
 setuptools~=42.0.2

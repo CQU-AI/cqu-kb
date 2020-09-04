@@ -7,7 +7,17 @@ from cqu_kb.core import get_cal, get_payload
 from cqu_jxgl import Student
 
 
-def server_main(username, password):
+def server_main(username, password, path):
+    main(username, password, path)
+
+
+def local_main():
+    username, password = check_user()
+    check_output_path()
+    main(username, password, config["output"]["path"])
+
+
+def main(username, password, path):
     student = Student(
         username=username,
         password=password
@@ -23,17 +33,10 @@ def server_main(username, password):
         ).content
     )
 
-    with open(config["output"]["path"], 'wb') as f:
+    with open(path, 'wb') as f:
         f.write(cal.to_ical())
 
-    log(f'课表已经保存到{config["output"]["path"]}')
-
-
-def main():
-    username, password = check_user()
-    check_output_path()
-
-    server_main(username, password)
+    log(f'课表已经保存到{path}')
 
 
 def console_main():

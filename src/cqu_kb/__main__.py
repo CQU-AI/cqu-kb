@@ -5,7 +5,6 @@ from cqu_kb.utils import check_user, log, check_output_path
 from cqu_kb.version import __version__
 from cqu_kb.core import get_cal, get_payload
 
-from urllib import parse
 from cqujwc import Student
 
 
@@ -19,7 +18,6 @@ def main():
         server=0,
         proxies=None
     )
-
 
     cal = get_cal(
         student.post(

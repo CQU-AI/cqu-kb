@@ -1,17 +1,26 @@
 import re
 import time
+from datetime import datetime, timedelta
 from urllib import parse
 
 import pytz
 import requests
+from bs4 import BeautifulSoup as BS
 from icalendar import Calendar, Event
-from datetime import datetime, timedelta, timezone
-from bs4 import BeautifulSoup as bs
 
 from cqu_kb.config import config
 
 
 def get_payload(student):
+    """
+    This function prepares the payload to be sent in HTTP POST method. There are three main fields in the payload. The
+    only thing that should be paid attention to is "Sel_XNXQ" filed, which denotes the years（学年） and terms（学期）.
+    To succeed in getting "/znpk/Pri_StuSel.aspx", where the payload lies in, a cookie named "DSafeId" must be included
+    in the headers of HTTP GET, otherwise the the server will only return a javascript function indicating the browser
+    to do so. The cookie will be included in that javascript function.
+    :param student: an instance of Student from cqujwc
+    :return: payload to be used in HTTP POST
+    """
     # First Get. Won't get any information but a cookie.
     response = student.get("/znpk/Pri_StuSel.aspx")
     # Extract the cookie
@@ -27,7 +36,7 @@ def get_payload(student):
     # Then Get again. The real website is revealed.
     response = student.get("/znpk/Pri_StuSel.aspx")
 
-    soup = bs(response.content, features="html.parser")
+    soup = BS(response.content, features="html.parser")
     return parse.urlencode({
         "Sel_XNXQ": soup.find("option")['value'],
         "rad": "on",
@@ -36,7 +45,7 @@ def get_payload(student):
 
 
 def get_cal(page_content):
-    soup = bs(page_content, features="html.parser")
+    soup = BS(page_content, features="html.parser")
     tables = soup.find_all(class_="page_table")
 
     courses_info = []

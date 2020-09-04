@@ -4,20 +4,16 @@ from cqu_kb.config.config import config, Config
 from cqu_kb.utils import check_user, log, check_output_path
 from cqu_kb.version import __version__
 from cqu_kb.core import get_cal, get_payload
+from cqu_jxgl import Student
 
-from cqujwc import Student
 
-
-def main():
-    username, password = check_user()
-    check_output_path()
-
+def server_main(username, password):
     student = Student(
         username=username,
-        password=password,
-        server=0,
-        proxies=None
+        password=password
     )
+
+    student.login()
 
     cal = get_cal(
         student.post(
@@ -31,6 +27,13 @@ def main():
         f.write(cal.to_ical())
 
     log(f'课表已经保存到{config["output"]["path"]}')
+
+
+def main():
+    username, password = check_user()
+    check_output_path()
+
+    server_main(username, password)
 
 
 def console_main():

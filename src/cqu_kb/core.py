@@ -14,11 +14,12 @@ from cqu_kb.config import config
 def get_payload(student):
     """
     This function prepares the payload to be sent in HTTP POST method. There are three main fields in the payload. The
-    only thing that should be paid attention to is "Sel_XNXQ" filed, which denotes the years（学年） and terms（学期）.
+    only thing that should be paid attention to is "Sel_XNXQ" field, which denotes the years（学年） and terms（学期）.
     To succeed in getting "/znpk/Pri_StuSel.aspx", where the payload lies in, a cookie named "DSafeId" must be included
     in the headers of HTTP GET, otherwise the the server will only return a javascript function indicating the browser
     to do so. The cookie will be included in that javascript function.
-    :param student: an instance of Student from cqujwc
+
+    :param student: an instance of Student from cqu-jxgl
     :return: payload to be used in HTTP POST
     """
     # First Get. Won't get any information but a cookie.
@@ -28,7 +29,7 @@ def get_payload(student):
 
     # Add the cookie to current session
     cookie_obj = requests.cookies.create_cookie(domain='jxgl.cqu.edu.cn', name='DSafeId', value=dsafeid)
-    student._Student__session.cookies.set_cookie(cookie_obj)
+    student.session.cookies.set_cookie(cookie_obj)
 
     # Waiting for 0.68s. This is MANDATORY.
     time.sleep(0.68)

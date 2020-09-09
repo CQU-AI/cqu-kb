@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta
 from urllib import parse
 
@@ -107,6 +108,14 @@ def get_cal(page_content):
                 event.add('location', course['location'])
                 event.add('dtstart', event_start_datetime)
                 event.add('dtend', event_end_datetime)
+                # Fix #2: 添加 dtstamp 与 uid 属性
+                event.add('dtstamp', datetime.utcnow())
+                namespace = uuid.UUID(
+                    bytes=int(event_start_datetime.timestamp()).to_bytes(length=8, byteorder='big') +
+                          int(event_end_datetime.timestamp()).to_bytes(length=8, byteorder='big')
+                )
+                event.add('uid', uuid.uuid3(namespace, f"{course['course_name']}-{course['teacher']}"))
+
                 events.append(event)
 
     cal = Calendar()

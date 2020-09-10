@@ -1,9 +1,11 @@
+import uuid
 from datetime import datetime, timedelta
 from urllib import parse
 
 import pytz
 from bs4 import BeautifulSoup as BS
 from icalendar import Calendar, Event
+from icalendar import Timezone
 
 from cqu_kb.config import config
 
@@ -107,11 +109,29 @@ def get_cal(page_content):
                 event.add('location', course['location'])
                 event.add('dtstart', event_start_datetime)
                 event.add('dtend', event_end_datetime)
+                # Fix #2: 添加 dtstamp 与 uid 属性
+                event.add('dtstamp', datetime.utcnow())
+                namespace = uuid.UUID(
+                    bytes=int(event_start_datetime.timestamp()).to_bytes(length=8, byteorder='big') +
+                          int(event_end_datetime.timestamp()).to_bytes(length=8, byteorder='big')
+                )
+                event.add('uid', uuid.uuid3(namespace, f"{course['course_name']}-{course['teacher']}"))
+
                 events.append(event)
 
     cal = Calendar()
     cal.add('prodid', f'-//重庆大学课表//{config["user_info"]["username"]}//Powered By cqu-kb//')
     cal.add('version', '2.0')
+    cal.add_component(Timezone.from_ical("BEGIN:VTIMEZONE\n"
+                                         "TZID:Asia/Shanghai\n"
+                                         "X-LIC-LOCATION:Asia/Shanghai\n"
+                                         "BEGIN:STANDARD\n"
+                                         "TZNAME:CST\n"
+                                         "DTSTART:16010101T000000\n"
+                                         "TZOFFSETFROM:+0800\n"
+                                         "TZOFFSETTO:+0800\n"
+                                         "END:STANDARD\n"
+                                         "END:VTIMEZONE\n"))
     for event in events:
         cal.add_component(event)
     return cal

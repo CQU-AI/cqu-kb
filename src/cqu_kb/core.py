@@ -5,7 +5,7 @@ from urllib import parse
 import pytz
 from bs4 import BeautifulSoup as BS
 from icalendar import Calendar, Event
-from icalendar import Timezone
+from icalendar import Timezone, vDDDTypes
 
 from cqu_kb.config import config
 
@@ -27,6 +27,12 @@ def get_payload(student):
         "px": "1",
     })
 
+
+def _add_datetime(component, name, time):
+    vdatetime = vDDDTypes(time)
+    if 'VALUE' in vdatetime.params and 'TZID' in vdatetime.params:
+        vdatetime.params.pop('VALUE')
+    component.add(name, vdatetime)
 
 def get_cal(page_content):
     soup = BS(page_content, features="html.parser")
@@ -107,8 +113,8 @@ def get_cal(page_content):
                 event = Event()
                 event.add('summary', '[{}]{}'.format(course['teacher'], course['course_name']))
                 event.add('location', course['location'])
-                event.add('dtstart', event_start_datetime)
-                event.add('dtend', event_end_datetime)
+                _add_datetime(event, 'dtstart', event_start_datetime)
+                _add_datetime(event, 'dtend', event_end_datetime)
                 # Fix #2: 添加 dtstamp 与 uid 属性
                 event.add('dtstamp', datetime.utcnow())
                 namespace = uuid.UUID(

@@ -35,7 +35,7 @@ def _add_datetime(component, name, time):
     component.add(name, vdatetime)
 
 def get_cal(page_content):
-    soup = BS(page_content, features="html.parser")
+    soup = BS(page_content.decode('gbk'), features="html.parser")
     tables = soup.find_all(class_="page_table")
 
     courses_info = []

@@ -7,6 +7,7 @@ from flask import Flask, send_from_directory, Response, abort, redirect
 from cqu_kb.__main__ import server_main
 from cqu_kb.utils import is_grad, is_under_grad
 
+
 app = Flask(__name__)
 
 base_dir = Path("--enter-path-here--")

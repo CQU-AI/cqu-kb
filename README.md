@@ -6,7 +6,7 @@
 ![download](https://pepy.tech/badge/cqu-kb)
 ![Upload Python Package](https://github.com/CQU-AI/cqu-kb/workflows/Upload%20Python%20Package/badge.svg)
 
-cqu-kb 是一个基于python3的，导出重庆大学课程表的第三方工具。
+cqu-kb 是一个基于python3的，导出重庆大学**本科生和研究生**课程表的第三方工具。
 
 
 ## 1. 安装和使用
@@ -37,3 +37,4 @@ cqu-kb 是一个基于python3的，导出重庆大学课程表的第三方工具
 2. 本程序不存储用户的帐号，密码。
 3. 本程序不存储任何人的课表，所有的数据来自于重庆大学教务网。
 4. 本程序依赖于[`cqu-jxgl`](https://github.com/CQU-AI/cqu-jxgl)
+5. 在订阅使用时，由于直接使用http的get，存在一定的隐私泄露风险，详见 #5 。

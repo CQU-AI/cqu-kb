@@ -3,4 +3,4 @@ from cqu_kb.utils import check_update
 
 __all__ = ["main", "console_main"]
 
-# check_update('cqu-kb')
+check_update("cqu-kb")

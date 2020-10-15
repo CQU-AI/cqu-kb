@@ -8,22 +8,24 @@ from pathlib import Path
 import requests
 
 from cqu_kb.config.config import config
+from cqu_kb.core.KBCoreGrad import KBCoreGrad
+from cqu_kb.core.KBCoreUnderGrad import KBCoreUnderGrad
 from cqu_kb.version import __version__
 
 ERROR_COUNT = 0
 
 
 def check_output_path():
-    if config['output']['path'] is None:
+    if config["output"]["path"] is None:
         flag = False
         for i in ["Desktop", "桌面", "desktop"]:
             if (Path.home() / i).is_dir():
                 flag = True
                 break
         if flag:
-            config['output']['path'] = Path.home() / i / "课表.ics"
+            config["output"]["path"] = Path.home() / i / "课表.ics"
         else:
-            config['output']['path'] = Path("./课表.ics").absolute()
+            config["output"]["path"] = Path("./课表.ics").absolute()
 
 
 def exit():
@@ -53,8 +55,8 @@ def reset_error_count():
 
 def check_user():
     if (
-            config["user_info"]["username"] is None
-            or config["user_info"]["password"] is None
+        config["user_info"]["username"] is None
+        or config["user_info"]["password"] is None
     ):
         print("未找到有效的帐号和密码，请输入你的帐号和密码，它们将被保存在你的电脑上以备下次使用")
         try:
@@ -77,3 +79,20 @@ def check_update(project_name):
             f"{project_name}的最新版本为{latest_version}，当前安装的是{__version__}，建议使用`pip install {project_name} -U`来升级",
             warning=True,
         )
+
+
+def select_core(username):
+    if is_under_grad(username):
+        return KBCoreUnderGrad
+    elif is_grad(username):
+        return KBCoreGrad
+    else:
+        raise AttributeError(f"无法匹配的学号：{username}")
+
+
+def is_under_grad(username):
+    return username.isdigit() and len(username) == 8 and username.startswith("20")
+
+
+def is_grad(username):
+    return username.isdigit() and len(username) == 12 and username.startswith("20")

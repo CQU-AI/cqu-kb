@@ -1,10 +1,18 @@
 import sys
 
 from cqu_kb.config.config import config, Config
-from cqu_kb.utils import check_user, log, check_output_path
+from cqu_kb.utils import check_user, log, check_output_path, select_core
 from cqu_kb.version import __version__
-from cqu_kb.core import get_cal, get_payload
-from cqu_jxgl import Student
+
+
+def main(username, password, path):
+    core = select_core(username)
+    cal = core(username, password).main()
+
+    with open(path, "wb") as f:
+        f.write(cal.to_ical())
+
+    log(f"课表已经保存到{path}")
 
 
 def server_main(username, password, path):
@@ -17,28 +25,6 @@ def local_main():
     main(username, password, config["output"]["path"])
 
 
-def main(username, password, path):
-    student = Student(
-        username=username,
-        password=password
-    )
-
-    student.login()
-
-    cal = get_cal(
-        student.post(
-            url="/znpk/Pri_StuSel_rpt.aspx",
-            headers={"Content-Type": "application/x-www-form-urlencoded;charset=utf-8"},
-            data=get_payload(student)
-        ).content
-    )
-
-    with open(path, 'wb') as f:
-        f.write(cal.to_ical())
-
-    log(f'课表已经保存到{path}')
-
-
 def console_main():
     import argparse
 
@@ -47,7 +33,10 @@ def console_main():
 
         :return: Namespace with parsed arguments.
         """
-        parser = argparse.ArgumentParser(prog="kb", description="第三方 重庆大学 课表导出工具", )
+        parser = argparse.ArgumentParser(
+            prog="kb",
+            description="第三方 重庆大学 课表导出工具",
+        )
 
         parser.add_argument(
             "-v",
@@ -63,7 +52,10 @@ def console_main():
             action="store_true",
         )
         parser.add_argument(
-            "-r", "--reset", help="重置配置项", action="store_true",
+            "-r",
+            "--reset",
+            help="重置配置项",
+            action="store_true",
         )
         parser.add_argument(
             "-u",
@@ -84,7 +76,7 @@ def console_main():
             "--output",
             help="课表输出路径",
             type=str,
-            default=config['output']['path'],
+            default=config["output"]["path"],
         )
         return parser.parse_args()
 
@@ -101,5 +93,5 @@ def console_main():
     local_main()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     local_main()
